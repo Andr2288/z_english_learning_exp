@@ -16,7 +16,7 @@ import { Loader, Eye, Lightbulb, Volume2 } from "lucide-react";
 
 import Modal from "../common/Modal.jsx";
 
-function TranslateSentenceExercise() {
+const TranslateSentenceExercise = () => {
     const [
         doAddVocabularyWord,
         isAddingVocabularyWord,
@@ -320,7 +320,7 @@ function TranslateSentenceExercise() {
                     </p>
                 </div>
             ) : exerciseState.currentSelection.length > 0 &&
-              exerciseState.exerciseVocabularyItem ? (
+              exerciseState.generatedExerciseData ? (
                 <>
                     {exerciseState.currentSelection.length > 0 && (
                         <div className="mb-4 flex justify-center">
@@ -362,7 +362,7 @@ function TranslateSentenceExercise() {
                                 sm:text-xl: планшети+ (20px) */}
                             <p className="text-xl text-gray-800 leading-relaxed font-mono tracking-wide">
                                 {
-                                    exerciseState.exerciseVocabularyItem
+                                    exerciseState.generatedExerciseData
                                         .example_ukr
                                 }
                             </p>
@@ -380,7 +380,7 @@ function TranslateSentenceExercise() {
                                 <button
                                     onClick={() =>
                                         handlePlayAudio(
-                                            exerciseState.exerciseVocabularyItem
+                                            exerciseState.generatedExerciseData
                                                 .example_eng
                                         )
                                     }
@@ -398,9 +398,9 @@ function TranslateSentenceExercise() {
                                 {/* break-words: переносить довгі слова на новий рядок на мобільних */}
                                 <p className="text-lg text-gray-800 font-semibold wrap-break-word">
                                     {highlightUsedForm(
-                                        exerciseState.exerciseVocabularyItem
+                                        exerciseState.generatedExerciseData
                                             .example_eng,
-                                        exerciseState.exerciseVocabularyItem
+                                        exerciseState.generatedExerciseData
                                             .used_form
                                     )}
                                 </p>
@@ -506,66 +506,64 @@ function TranslateSentenceExercise() {
     );
 
     return (
-        <div className="ml-64 min-h-screen flex bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
-            <div className="w-full sm:w-3/4 lg:w-1/2 min-h-160 sm:min-h-130 flex flex-col items-center bg-white rounded-2xl shadow-md p-6 lg:p-12 pt-12 lg:pt-16 pb-10 mx-5 sm:m-auto">
-                {content}
+        <div className="w-full sm:w-3/4 lg:w-1/2 min-h-160 sm:min-h-130 flex flex-col items-center bg-white rounded-2xl shadow-md p-6 lg:p-12 pt-12 lg:pt-16 pb-10 mx-5 sm:m-auto">
+            {content}
 
-                {/* АДАПТИВНИЙ КОНТЕЙНЕР ДЛЯ КНОПОК */}
-                {/* self-stretch: займає всю ширину батьківського контейнера */}
-                {/* flex-col: мобільний макет - кнопки в колону
+            {/* АДАПТИВНИЙ КОНТЕЙНЕР ДЛЯ КНОПОК */}
+            {/* self-stretch: займає всю ширину батьківського контейнера */}
+            {/* flex-col: мобільний макет - кнопки в колону
                 sm:flex-row: планшети+ - кнопки в рядок */}
-                {/* gap-2: мобільний зазор між кнопками (0.5rem = 8px)
+            {/* gap-2: мобільний зазор між кнопками (0.5rem = 8px)
                 sm:gap-3: планшети+ зазор (0.75rem = 12px) */}
-                <div className="self-stretch flex flex-col sm:flex-row justify-center gap-3">
-                    {/* АДАПТИВНА КНОПКА "ПОВТОРИТИ" */}
-                    {/* px-6: мобільна паддінг по сторонам (1.5rem = 24px)
+            <div className="self-stretch flex flex-col sm:flex-row justify-center gap-3">
+                {/* АДАПТИВНА КНОПКА "ПОВТОРИТИ" */}
+                {/* px-6: мобільна паддінг по сторонам (1.5rem = 24px)
                     sm:px-22.5: планшети+ паддінг (5.625rem = 90px) */}
-                    {/* py-2.5: мобільна висота кнопки (0.625rem = 10px)
+                {/* py-2.5: мобільна висота кнопки (0.625rem = 10px)
                     sm:py-3.5: планшети+ висота (0.875rem = 14px) */}
-                    {/* text-sm: мобільний розмір шрифту (14px)
+                {/* text-sm: мобільний розмір шрифту (14px)
                     sm:text-lg: планшети+ розмір (18px) */}
-                    {/* gap-2: мобільний зазор між іконкою та текстом (0.5rem)
+                {/* gap-2: мобільний зазор між іконкою та текстом (0.5rem)
                     sm:gap-3: планшети+ зазор (0.75rem) */}
-                    {/* w-full: займає всю ширину на мобільних
+                {/* w-full: займає всю ширину на мобільних
                     sm:w-auto: природна ширина на планшетах+ */}
-                    <button
-                        onClick={() => handleNextButtonClick("AGAIN")}
-                        hidden={
-                            data.length <= 0 ||
-                            isLoadingVocabularyWords ||
-                            exerciseState.isLoading ||
-                            exerciseState.currentSelection.length <= 0
-                        }
-                        className={`px-6 sm:px-22.5 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 flex justify-center items-center gap-2 sm:gap-3 order-1 sm:order-0 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg hover:scale-102 cursor-pointer w-full sm:w-auto`}
-                    >
-                        Повторити
-                    </button>
-                    {/* АДАПТИВНА КНОПКА "ДОБРЕ" */}
-                    {/* Аналогічні адаптивні класи як для кнопки "Повторити" */}
-                    <button
-                        onClick={() => handleNextButtonClick("REVIEW")}
-                        hidden={
-                            data.length <= 0 ||
-                            isLoadingVocabularyWords ||
-                            exerciseState.isLoading ||
-                            exerciseState.currentSelection.length <= 0
-                        }
-                        className={`px-6 sm:px-22.5 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 flex justify-center items-center gap-2 sm:gap-3 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg hover:scale-102 cursor-pointer w-full sm:w-auto`}
-                    >
-                        Добре
-                    </button>
-                </div>
-
-                <Modal
-                    isActive={uiState.showAddVocabularyWordModal}
-                    closeModal={handleCloseModal}
-                    onSubmit={handleAddWord}
-                    isLoading={isAddingVocabularyWord}
-                    existingWords={data}
-                />
+                <button
+                    onClick={() => handleNextButtonClick("AGAIN")}
+                    hidden={
+                        data.length <= 0 ||
+                        isLoadingVocabularyWords ||
+                        exerciseState.isLoading ||
+                        exerciseState.currentSelection.length <= 0
+                    }
+                    className={`px-6 sm:px-22.5 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 flex justify-center items-center gap-2 sm:gap-3 order-1 sm:order-0 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg hover:scale-102 cursor-pointer w-full sm:w-auto`}
+                >
+                    Повторити
+                </button>
+                {/* АДАПТИВНА КНОПКА "ДОБРЕ" */}
+                {/* Аналогічні адаптивні класи як для кнопки "Повторити" */}
+                <button
+                    onClick={() => handleNextButtonClick("REVIEW")}
+                    hidden={
+                        data.length <= 0 ||
+                        isLoadingVocabularyWords ||
+                        exerciseState.isLoading ||
+                        exerciseState.currentSelection.length <= 0
+                    }
+                    className={`px-6 sm:px-22.5 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 flex justify-center items-center gap-2 sm:gap-3 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg hover:scale-102 cursor-pointer w-full sm:w-auto`}
+                >
+                    Добре
+                </button>
             </div>
+
+            <Modal
+                isActive={uiState.showAddVocabularyWordModal}
+                closeModal={handleCloseModal}
+                onSubmit={handleAddWord}
+                isLoading={isAddingVocabularyWord}
+                existingWords={data}
+            />
         </div>
     );
-}
+};
 
-export default TranslateSentenceExercise;
+export { TranslateSentenceExercise };

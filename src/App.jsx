@@ -11,9 +11,11 @@ import {
     SettingsPage,
 } from "./pages/index.js";
 
-import TranslateSentenceExercise from "./components/exercises/TranslateSentenceExercise.jsx";
-import FillTheGapExercise from "./components/exercises/FillTheGapExercise.jsx";
-import ListenAndFillTheGapExercise from "./components/exercises/ListenAndFillTheGapExercise.jsx";
+import {
+    TranslateSentenceExercise,
+    FillTheGapExercise,
+    ListenAndFillTheGapExercise,
+} from "./components/exercises/index.js";
 
 import { useState } from "react";
 

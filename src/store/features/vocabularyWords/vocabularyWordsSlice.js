@@ -255,7 +255,8 @@ const vocabularyWordsSlice = createSlice({
     initialState: {
         data: [],
         exerciseState: {
-            exerciseVocabularyItem: null,
+            exerciseType: "translate-sentence",
+            generatedExerciseData: null,
             currentSelection: [],
             currentVocabularyWordIndex: 0,
             isLoading: false,
@@ -374,7 +375,7 @@ const vocabularyWordsSlice = createSlice({
         builder.addCase(
             generateExerciseVocabularyItem.fulfilled,
             (state, action) => {
-                state.exerciseState.exerciseVocabularyItem = action.payload;
+                state.exerciseState.generatedExerciseData = action.payload;
                 state.exerciseState.isLoading = false;
             }
         );
