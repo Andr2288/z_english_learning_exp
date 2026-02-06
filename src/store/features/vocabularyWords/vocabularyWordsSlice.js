@@ -1,56 +1,40 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import {
-    addVocabularyWord,
-    fetchVocabularyWords,
-    updateVocabularyWord,
-    generateExerciseVocabularyItem,
-} from "./vocabularyWordsThunks";
-import { useCallback, useEffect } from "react";
+import { addVocabularyWord, fetchVocabularyWords, updateVocabularyWord, generateExerciseVocabularyItem } from "./vocabularyWordsThunks";
 
 const findMissedVocabularyItems = (state) => {
+    const currentTypeStatusProperty = `status_${state.exerciseState.exerciseType}`;
+    const currentTypeCheckpointProperty = `checkpoint_${state.exerciseState.exerciseType}`;
+    const currentTypeLastReviewedProperty = `last_reviewed_${state.exerciseState.exerciseType}`;
+
     for (const vocabularyItem of state.data) {
         // 1. Find daysPassedAfterLastReview
-        if (
-            vocabularyItem.metodology_parameters.status === "MISSED" ||
-            vocabularyItem.metodology_parameters.status === "NEW"
-        ) {
+        if (vocabularyItem.metodology_parameters.status === "MISSED" || vocabularyItem.metodology_parameters.status === "NEW") {
             continue;
         }
 
         const today = new Date();
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        );
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed);
         today.setHours(0, 0, 0, 0);
         lastReviewed.setHours(0, 0, 0, 0);
         const diffInMs = today - lastReviewed;
         const daysPassedAfterLastReview = diffInMs / (1000 * 60 * 60 * 24);
 
         // 2. Find currentCheckpointIndex
-        const currentCheckpointIndex = state.checkpoints.findIndex(
-            (checkpoint) => {
-                return (
-                    checkpoint.checkpoint ===
-                    vocabularyItem.metodology_parameters.checkpoint
-                );
-            }
-        );
+        const currentCheckpointIndex = state.checkpoints.findIndex((checkpoint) => {
+            return checkpoint.checkpoint === vocabularyItem.metodology_parameters.checkpoint;
+        });
 
         if (currentCheckpointIndex === -1) {
             continue;
         }
 
         // 3. Update Missed Item
-        if (
-            daysPassedAfterLastReview >
-            state.checkpoints[currentCheckpointIndex].threshold
-        ) {
+        if (daysPassedAfterLastReview > state.checkpoints[currentCheckpointIndex].threshold) {
             // Update Item In Data Array
             vocabularyItem.metodology_parameters.status = "MISSED";
 
             if (vocabularyItem.metodology_parameters.checkpoint > 0) {
-                vocabularyItem.metodology_parameters.checkpoint =
-                    state.checkpoints[currentCheckpointIndex - 1].checkpoint;
+                vocabularyItem.metodology_parameters.checkpoint = state.checkpoints[currentCheckpointIndex - 1].checkpoint;
             }
 
             console.log(
@@ -62,10 +46,7 @@ const findMissedVocabularyItems = (state) => {
                     ***
                     Set Checkpoint to: ${
                         vocabularyItem.metodology_parameters.checkpoint > 0
-                            ? (vocabularyItem.metodology_parameters.checkpoint =
-                                  state.checkpoints[
-                                      currentCheckpointIndex - 1
-                                  ].checkpoint)
+                            ? (vocabularyItem.metodology_parameters.checkpoint = state.checkpoints[currentCheckpointIndex - 1].checkpoint)
                             : 0
                     }
                     Set Status to: "MISSED"
@@ -84,9 +65,7 @@ const selectNextItems = (data) => {
     });
     if (missedItemIndex !== -1) {
         nextSelection.push(data[missedItemIndex]);
-        console.log(
-            `Знайшов MISSED Item: ${data[missedItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов MISSED Item: ${data[missedItemIndex].main_parameters.text}`);
     }
 
     // Пріоритет 2: Item reviewed 1 day ago
@@ -96,9 +75,7 @@ const selectNextItems = (data) => {
         }
 
         const today = new Date();
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        );
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed);
         today.setHours(0, 0, 0, 0);
         lastReviewed.setHours(0, 0, 0, 0);
         const diffInMs = today - lastReviewed;
@@ -112,9 +89,7 @@ const selectNextItems = (data) => {
     });
     if (yesterdayItemIndex !== -1) {
         nextSelection.push(data[yesterdayItemIndex]);
-        console.log(
-            `Знайшов Item reviewed 1 day ago: ${data[yesterdayItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов Item reviewed 1 day ago: ${data[yesterdayItemIndex].main_parameters.text}`);
     }
 
     // Пріоритет 3: Item reviewed 7 days ago
@@ -124,9 +99,7 @@ const selectNextItems = (data) => {
         }
 
         const today = new Date();
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        );
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed);
         today.setHours(0, 0, 0, 0);
         lastReviewed.setHours(0, 0, 0, 0);
         const diffInMs = today - lastReviewed;
@@ -140,9 +113,7 @@ const selectNextItems = (data) => {
     });
     if (sevenDaysAgoItemIndex !== -1) {
         nextSelection.push(data[sevenDaysAgoItemIndex]);
-        console.log(
-            `Знайшов Item reviewed 7 days ago: ${data[sevenDaysAgoItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов Item reviewed 7 days ago: ${data[sevenDaysAgoItemIndex].main_parameters.text}`);
     }
 
     // Пріоритет 4: Item reviewed 14 days ago
@@ -152,9 +123,7 @@ const selectNextItems = (data) => {
         }
 
         const today = new Date();
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        );
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed);
         today.setHours(0, 0, 0, 0);
         lastReviewed.setHours(0, 0, 0, 0);
 
@@ -169,9 +138,7 @@ const selectNextItems = (data) => {
     });
     if (fourteenDaysAgoItemIndex !== -1) {
         nextSelection.push(data[fourteenDaysAgoItemIndex]);
-        console.log(
-            `Знайшов Item reviewed 14 days ago: ${data[fourteenDaysAgoItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов Item reviewed 14 days ago: ${data[fourteenDaysAgoItemIndex].main_parameters.text}`);
     }
 
     // Пріоритет 5: Item reviewed 30 days ago
@@ -181,9 +148,7 @@ const selectNextItems = (data) => {
         }
 
         const today = new Date();
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        );
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed);
         today.setHours(0, 0, 0, 0);
         lastReviewed.setHours(0, 0, 0, 0);
 
@@ -198,18 +163,11 @@ const selectNextItems = (data) => {
     });
     if (thirtyDaysAgoItemIndex !== -1) {
         nextSelection.push(data[thirtyDaysAgoItemIndex]);
-        console.log(
-            `Знайшов Item reviewed 30 days ago: ${data[thirtyDaysAgoItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов Item reviewed 30 days ago: ${data[thirtyDaysAgoItemIndex].main_parameters.text}`);
     }
 
     // Пріоритет 6: New Items (30%)
-    const newItems = data
-        .filter(
-            (vocabularyItem) =>
-                vocabularyItem.metodology_parameters.status === "NEW"
-        )
-        .slice(0, 3); // беремо рівно 3
+    const newItems = data.filter((vocabularyItem) => vocabularyItem.metodology_parameters.status === "NEW").slice(0, 3); // беремо рівно 3
 
     if (newItems.length > 0) {
         nextSelection.push(...newItems);
@@ -228,22 +186,15 @@ const selectNextItems = (data) => {
         const today = new Date().toLocaleDateString("en-CA", {
             timeZone: "Europe/Kyiv",
         });
-        const lastReviewed = new Date(
-            vocabularyItem.metodology_parameters.lastReviewed
-        ).toLocaleDateString("en-CA", {
+        const lastReviewed = new Date(vocabularyItem.metodology_parameters.lastReviewed).toLocaleDateString("en-CA", {
             timeZone: "Europe/Kyiv",
         });
 
-        return (
-            vocabularyItem.metodology_parameters.status === "AGAIN" &&
-            lastReviewed === today
-        );
+        return vocabularyItem.metodology_parameters.status === "AGAIN" && lastReviewed === today;
     });
     if (againItemIndex !== -1) {
         nextSelection.push(data[againItemIndex]);
-        console.log(
-            `Знайшов AGAIN today item: ${data[againItemIndex].main_parameters.text}`
-        );
+        console.log(`Знайшов AGAIN today item: ${data[againItemIndex].main_parameters.text}`);
     }
 
     console.log(nextSelection.length);
@@ -312,13 +263,23 @@ const vocabularyWordsSlice = createSlice({
                     status: word.status,
                     lastReviewed: word.last_reviewed,
                     checkpoint: word.checkpoint,
+
+                    status_translate_sentence_exercise: word.status_translate_sentence_exercise,
+                    status_fill_the_gap_exercise: word.status_fill_the_gap_exercise,
+                    status_listen_and_fill_the_gap_exercise: word.status_listen_and_fill_the_gap_exercise,
+
+                    checkpoint_translate_sentence_exercise: word.checkpoint_translate_sentence_exercise,
+                    checkpoint_fill_the_gap_exercise: word.checkpoint_fill_the_gap_exercise,
+                    checkpoint_listen_and_fill_the_gap_exercise: word.checkpoint_listen_and_fill_the_gap_exercise,
+
+                    last_reviewed_translate_sentence_exercise: word.last_reviewed_translate_sentence_exercise,
+                    last_reviewed_fill_the_gap_exercise: word.last_reviewed_fill_the_gap_exercise,
+                    last_reviewed_listen_and_fill_the_gap_exercise: word.last_reviewed_listen_and_fill_the_gap_exercise,
                 },
             });
 
             if (state.exerciseState.currentSelection.length === 0) {
-                state.exerciseState.currentSelection = selectNextItems(
-                    state.data
-                );
+                state.exerciseState.currentSelection = selectNextItems(state.data);
             }
         });
 
@@ -334,6 +295,19 @@ const vocabularyWordsSlice = createSlice({
                     status: word.status,
                     lastReviewed: word.last_reviewed,
                     checkpoint: word.checkpoint,
+                    createdAt: word.created_at,
+
+                    status_translate_sentence_exercise: word.status_translate_sentence_exercise,
+                    status_fill_the_gap_exercise: word.status_fill_the_gap_exercise,
+                    status_listen_and_fill_the_gap_exercise: word.status_listen_and_fill_the_gap_exercise,
+
+                    checkpoint_translate_sentence_exercise: word.checkpoint_translate_sentence_exercise,
+                    checkpoint_fill_the_gap_exercise: word.checkpoint_fill_the_gap_exercise,
+                    checkpoint_listen_and_fill_the_gap_exercise: word.checkpoint_listen_and_fill_the_gap_exercise,
+
+                    last_reviewed_translate_sentence_exercise: word.last_reviewed_translate_sentence_exercise,
+                    last_reviewed_fill_the_gap_exercise: word.last_reviewed_fill_the_gap_exercise,
+                    last_reviewed_listen_and_fill_the_gap_exercise: word.last_reviewed_listen_and_fill_the_gap_exercise,
                 },
             }));
 
@@ -361,6 +335,18 @@ const vocabularyWordsSlice = createSlice({
                         status: word.status,
                         lastReviewed: word.last_reviewed,
                         checkpoint: word.checkpoint,
+
+                        status_translate_sentence_exercise: word.status_translate_sentence_exercise,
+                        status_fill_the_gap_exercise: word.status_fill_the_gap_exercise,
+                        status_listen_and_fill_the_gap_exercise: word.status_listen_and_fill_the_gap_exercise,
+
+                        checkpoint_translate_sentence_exercise: word.checkpoint_translate_sentence_exercise,
+                        checkpoint_fill_the_gap_exercise: word.checkpoint_fill_the_gap_exercise,
+                        checkpoint_listen_and_fill_the_gap_exercise: word.checkpoint_listen_and_fill_the_gap_exercise,
+
+                        last_reviewed_translate_sentence_exercise: word.last_reviewed_translate_sentence_exercise,
+                        last_reviewed_fill_the_gap_exercise: word.last_reviewed_fill_the_gap_exercise,
+                        last_reviewed_listen_and_fill_the_gap_exercise: word.last_reviewed_listen_and_fill_the_gap_exercise,
                     },
                 };
             }
@@ -372,16 +358,12 @@ const vocabularyWordsSlice = createSlice({
             state.exerciseState.generateNextStage = false;
         });
 
-        builder.addCase(
-            generateExerciseVocabularyItem.fulfilled,
-            (state, action) => {
-                state.exerciseState.generatedExerciseData = action.payload;
-                state.exerciseState.isLoading = false;
-            }
-        );
+        builder.addCase(generateExerciseVocabularyItem.fulfilled, (state, action) => {
+            state.exerciseState.generatedExerciseData = action.payload;
+            state.exerciseState.isLoading = false;
+        });
     },
 });
 
-export const { updateExerciseState, makeNextSelection } =
-    vocabularyWordsSlice.actions;
+export const { updateExerciseState, makeNextSelection } = vocabularyWordsSlice.actions;
 export const vocabularyWordsReducer = vocabularyWordsSlice.reducer;
