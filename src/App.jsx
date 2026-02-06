@@ -55,6 +55,37 @@ function App() {
                         authUser ? <ProfilePage /> : <Navigate to="/login" />
                     }
                 />
+
+                <Route
+                    path="/practice/translate-sentence"
+                    element={
+                        authUser ? (
+                            <TranslateSentenceExercise />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                <Route
+                    path="/practice/fill-the-gap"
+                    element={
+                        authUser ? (
+                            <FillTheGapExercise />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                <Route
+                    path="/practice/listen-and-fill"
+                    element={
+                        authUser ? (
+                            <ListenAndFillTheGapExercise />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
             </Routes>
         </div>
 

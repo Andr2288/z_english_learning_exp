@@ -199,9 +199,9 @@ const ListenAndFillTheGapExercise = () => {
     };
 
     return (
-        <>
+        <div className="ml-64 min-h-screen flex bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
             {/* Question Content */}
-            <div className="bg-white rounded-2xl shadow-md p-8 pb-10">
+            <div className="w-full sm:w-3/4 lg:w-1/2 min-h-160 sm:min-h-130 bg-white rounded-2xl shadow-md p-6 lg:p-12 pt-12 lg:pt-16 pb-10 mx-5 sm:m-auto">
                 {isLoading ? (
                     <div className="text-center py-12">
                         <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
@@ -389,7 +389,7 @@ const ListenAndFillTheGapExercise = () => {
                     </>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 

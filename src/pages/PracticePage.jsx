@@ -1,10 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { ChevronRight, Target, Headphones, Type } from "lucide-react";
 
 const PracticePage = () => {
+    const navigate = useNavigate();
+
     const coreExercisesData = [
         {
             id: "translate-sentence-exercise",
-            title: "Переклад речення",
+            path: "/practice/translate-sentence",
+            title: "Переклади речення",
             description: "Перекладіть речення англійською",
             icon: Headphones,
             color: "from-blue-500 to-cyan-500",
@@ -15,6 +19,7 @@ const PracticePage = () => {
         },
         {
             id: "fill_the_gap_exercise",
+            path: "/practice/fill-the-gap",
             title: "Доповни речення",
             description: "Оберіть правильне слово для пропуску",
             icon: Type,
@@ -30,6 +35,7 @@ const PracticePage = () => {
         },
         {
             id: "listen-and-fill-exercise",
+            path: "/practice/listen-and-fill",
             title: "Слухання та письмо",
             description: "Прослухайте речення та впишіть пропущене слово",
             icon: Headphones,
@@ -42,7 +48,7 @@ const PracticePage = () => {
     ];
 
     return (
-        <div className="fixed ml-64 inset-0 flex flex-col min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
+        <div className="fixed ml-68 inset-0 flex flex-col min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
             {/* Hero Section */}
             <div className="shrink-0 bg-white border-b border-gray-200 overflow-hidden p-8">
                 <div className="mx-auto flex items-center">
@@ -76,6 +82,7 @@ const PracticePage = () => {
                                 return (
                                     <div
                                         key={exercise.id}
+                                        onClick={() => navigate(exercise.path)}
                                         className={`group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-between cursor-pointer hover:-translate-y-2`}
                                     >
                                         <div>
