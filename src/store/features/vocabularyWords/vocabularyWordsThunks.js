@@ -116,10 +116,10 @@ OUTPUT:
     const response = await client.responses.create({
         //model: "gpt-4o-mini", // швидкий // погана граматика
         //model: "gpt-4.1-mini", // трішки краща граматика
-        model: GPTModel.GPT41Mini, // довго, але краща граматика
+        model: GPTModel.GPT5Mini, // довго, але краща граматика
 
-        //reasoning: { effort: "low" },
-        temperature: 0.6,
+        reasoning: { effort: "low" },
+        //temperature: 0.6,
         input,
     });
 
@@ -207,8 +207,12 @@ OUTPUT:
 }`;
 
     const response = await client.responses.create({
-        model: GPTModel.GPT41Mini,
-        temperature: 0.7,
+        //model: "gpt-4o-mini", // швидкий // погана граматика
+        //model: "gpt-4.1-mini", // трішки краща граматика
+        model: GPTModel.GPT5Mini, // довго, але краща граматика
+
+        reasoning: { effort: "low" },
+        //temperature: 0.6,
         input,
     });
 
@@ -279,8 +283,12 @@ OUTPUT:
 }`;
 
     const response = await client.responses.create({
-        model: GPTModel.GPT41Mini,
-        temperature: 0.7,
+        //model: "gpt-4o-mini", // швидкий // погана граматика
+        //model: "gpt-4.1-mini", // трішки краща граматика
+        model: GPTModel.GPT5Mini, // довго, але краща граматика
+
+        reasoning: { effort: "low" },
+        //temperature: 0.6,
         input,
     });
 
